@@ -1,0 +1,10 @@
+{
+    "email_sender_account" : "somebody@gmail.com",
+    "email_sender_username" : "somebody",
+    "email_sender_password" : "somebodys password",
+    "email_smtp_server" : "smtp.gmail.com",
+    "email_smtp_port" : "587 for gmail",
+    "email_recepients" : [
+        "somebody@gmail.com",
+    ]
+}
