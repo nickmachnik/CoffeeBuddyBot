@@ -30,7 +30,7 @@ class CoffeeBot:
         self.smtp_server = config["smtp_server"]
         self.round = config["round"]
         year, week_num, day_of_week = datetime.date.today().isocalendar()
-        self.subject = config["subject"] + " Week {} {}".format(year, week_num)
+        self.subject = config["subject"] + " Week {} {}".format(week_num, year)
 
     def _send_test(self, recipient):
         server = smtplib.SMTP(self.smtp_server, self.smtp_port)
