@@ -4,17 +4,10 @@
     "sender_password" : "somebodys password",
     "smtp_server" : "smtp.gmail.com",
     "smtp_port" : "587 for gmail",
-    "recepients" : [
+    "recipients" : [
         "somebody@gmail.com",
+        "somebodyelse@gmail.com",
     ],
-  "recipients": [
-    "A",
-    "B",
-    "C",
-    "D",
-    "E",
-    "BREAK"
-  ],
-  "round": 4,
+  "round": 0,
   "subject": "[Group-kondrashov] Coffee Buddy"
 }
