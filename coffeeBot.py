@@ -23,8 +23,6 @@ def main():
 
 class CoffeeBot:
     def __init__(self, config):
-        year, week_num, day_of_week = datetime.date.today().isocalendar()
-        self.subject = config["subject"] + " Week {} {}".format(year, week_num)
         self.recipients = config["recipients"]
         self.sender_account = config["sender_account"]
         self.sender_password = config["sender_password"]
@@ -32,25 +30,42 @@ class CoffeeBot:
         self.smtp_port = config["smtp_port"]
         self.smtp_server = config["smtp_server"]
         self.round = config["round"]
+        year, week_num, day_of_week = datetime.date.today().isocalendar()
+        self.subject = config["subject"] + " Week {} {}".format(year, week_num)
 
     def _send_mails(self):
-        server = smtplib.SMTP(self.smtp_server,self.smtp_port)
+        server = smtplib.SMTP(self.smtp_server, self.smtp_port)
         server.starttls()
         server.login(self.sender_username, self.sender_password)
         for a, b in self._make_pairs():
             if a == "BREAK":
-                continue
+                self._send_break_message(server, b)
             elif b == "BREAK":
-                continue
+                self._send_break_message(server, a)
             else:
-                message = MIMEMultipart('alternative')
-                message['From'] = self.sender_account
-                message['To'] = recipient
-                message['Subject'] = self.subject
-                message.attach(MIMEText(self.body, 'html'))
-                text = message.as_string()
-                server.sendmail(self.sender_account,recipient,text)#All emails sent, log out.
+                self._send_buddy_message(server, a, b)
+                self._send_buddy_message(server, b, a)
         server.quit()
+
+    def _send_buddy_message(self, server, recipient, buddy):
+        message = MIMEMultipart('alternative')
+        message['From'] = self.sender_account
+        message['To'] = recipient
+        message['Subject'] = self.subject
+        body = "Your coffee body this week is {}".format(buddy)
+        message.attach(MIMEText(body, 'html'))
+        text = message.as_string()
+        server.sendmail(self.sender_account, recipient, text)
+
+    def _send_break_message(self, server, recipient):
+        message = MIMEMultipart('alternative')
+        message['From'] = self.sender_account
+        message['To'] = recipient
+        message['Subject'] = self.subject
+        body = "You have a break from coffee buddies this week :)"
+        message.attach(MIMEText(body, 'html'))
+        text = message.as_string()
+        server.sendmail(self.sender_account, recipient, text)
 
     def _make_pairs(self):
         hs = len(self.recipients) // 2
