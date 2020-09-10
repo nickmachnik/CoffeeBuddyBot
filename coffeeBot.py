@@ -4,6 +4,7 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import json
+import datetime
 
 
 def main():
@@ -22,7 +23,8 @@ def main():
 
 class CoffeeBot:
     def __init__(self, config):
-        self.subject = config["subject"]
+        year, week_num, day_of_week = datetime.date.today().isocalendar()
+        self.subject = config["subject"] + " Week {} {}".format(year, week_num)
         self.recipients = config["recipients"]
         self.sender_account = config["sender_account"]
         self.sender_password = config["sender_password"]
@@ -32,7 +34,6 @@ class CoffeeBot:
         self.round = config["round"]
 
     def _send_mails(self):
-        #login to email server
         server = smtplib.SMTP(self.smtp_server,self.smtp_port)
         server.starttls()
         server.login(self.sender_username, self.sender_password)
