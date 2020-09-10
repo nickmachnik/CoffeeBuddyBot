@@ -11,14 +11,13 @@ def main():
 
     with open("./config.json", 'r') as fin:
         config = json.load(fin)
+    config["round"] = config["round"] % (len(config["recipients"]) - 1)
     bot = CoffeeBot(config)
-    bot._send_mails()
-    # config["round"] = config["round"] % (len(config["email_recepients"]) - 1)
-    # pairs_iter = make_pairs(
-    #     config["round"], config["email_recepients"])
-    # config["round"] += 1
-    # with open("./config.json", 'w') as fout:
-    #     json.dump(config, fout, indent=2, sort_keys=True)
+    bot._send_test("nick.machnik@gmail.com")
+    bot._send_test("nick.machnik@ist.ac.at")
+    config["round"] += 1
+    with open("./config.json", 'w') as fout:
+        json.dump(config, fout, indent=2, sort_keys=True)
 
 
 class CoffeeBot:
@@ -32,6 +31,20 @@ class CoffeeBot:
         self.round = config["round"]
         year, week_num, day_of_week = datetime.date.today().isocalendar()
         self.subject = config["subject"] + " Week {} {}".format(year, week_num)
+
+    def _send_test(self, recipient):
+        server = smtplib.SMTP(self.smtp_server, self.smtp_port)
+        server.starttls()
+        server.login(self.sender_username, self.sender_password)
+        message = MIMEMultipart('alternative')
+        message['From'] = self.sender_account
+        message['To'] = recipient
+        message['Subject'] = self.subject
+        body = "This is a coffee buddy bot test mail."
+        message.attach(MIMEText(body, 'html'))
+        text = message.as_string()
+        server.sendmail(self.sender_account, recipient, text)
+        server.quit()
 
     def _send_mails(self):
         server = smtplib.SMTP(self.smtp_server, self.smtp_port)
