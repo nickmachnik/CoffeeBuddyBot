@@ -8,13 +8,13 @@ import datetime
 
 
 def main():
-
     with open("./config.json", 'r') as fin:
         config = json.load(fin)
     config["round"] = config["round"] % (len(config["recipients"]) - 1)
     bot = CoffeeBot(config)
-    bot._send_test("nick.machnik@gmail.com")
-    bot._send_test("nick.machnik@ist.ac.at")
+    bot._send_mails()
+    # bot._send_test("nick.machnik@gmail.com")
+    # bot._send_test("nick.machnik@ist.ac.at")
     config["round"] += 1
     with open("./config.json", 'w') as fout:
         json.dump(config, fout, indent=2, sort_keys=True)
@@ -51,6 +51,7 @@ class CoffeeBot:
         server.starttls()
         server.login(self.sender_username, self.sender_password)
         for a, b in self._make_pairs():
+            print(a[0], b[0])
             if a == "BREAK":
                 self._send_break_message(server, b)
             elif b == "BREAK":
@@ -63,9 +64,9 @@ class CoffeeBot:
     def _send_buddy_message(self, server, recipient, buddy):
         message = MIMEMultipart('alternative')
         message['From'] = self.sender_account
-        message['To'] = recipient
+        message['To'] = recipient[1]
         message['Subject'] = self.subject
-        body = "Your coffee body this week is {}".format(buddy)
+        body = "Your coffee body this week is {} ({})".format(*buddy)
         message.attach(MIMEText(body, 'html'))
         text = message.as_string()
         server.sendmail(self.sender_account, recipient, text)
@@ -73,7 +74,7 @@ class CoffeeBot:
     def _send_break_message(self, server, recipient):
         message = MIMEMultipart('alternative')
         message['From'] = self.sender_account
-        message['To'] = recipient
+        message['To'] = recipient[1]
         message['Subject'] = self.subject
         body = "You have a break from coffee buddies this week :)"
         message.attach(MIMEText(body, 'html'))
