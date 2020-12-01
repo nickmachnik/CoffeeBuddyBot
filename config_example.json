@@ -5,9 +5,15 @@
     "smtp_server" : "smtp.gmail.com",
     "smtp_port" : "587 for gmail",
     "recipients" : [
-        "somebody@gmail.com",
-        "somebodyelse@gmail.com",
+        [
+            "somebody"
+            "somebody@gmail.com",
+        ],
+        [
+            "somebody_else"
+            "somebody_else@gmail.com",
+        ],
     ],
   "round": 0,
-  "subject": "[Group-kondrashov] Coffee Buddy"
+  "subject": "Coffee Buddy"
 }
