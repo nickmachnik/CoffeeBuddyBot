@@ -20,6 +20,9 @@ The format is specified in `config_example.json`.
 Simply copy this file to the directory your `coffeeBot.py` is in, name it
 `config.json`, fill it out, and you are ready to go!
 
+Every time you execute your `coffeeBot.py`, it will go to the next pairing
+and send out the notifications.
+
 
 ## License
 
