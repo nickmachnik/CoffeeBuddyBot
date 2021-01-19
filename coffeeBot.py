@@ -5,6 +5,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import json
 import datetime
+import time
 
 
 def main():
@@ -59,6 +60,7 @@ class CoffeeBot:
             else:
                 self._send_buddy_message(server, a, b)
                 self._send_buddy_message(server, b, a)
+            time.sleep(3)
         server.quit()
 
     def _send_buddy_message(self, server, recipient, buddy):
